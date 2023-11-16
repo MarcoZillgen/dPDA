@@ -92,8 +92,8 @@ class PDA {
 
   test(testString: CellarString[]) {
     const test = this.run(testString);
-    if (test) console.log("Test passed");
-    else console.log("Test failed");
+    if (test) console.log("\nTest passed");
+    else console.log("\nTest failed");
   }
 }
 
