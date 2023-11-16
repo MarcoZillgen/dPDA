@@ -1,3 +1,4 @@
+
 // String used for single character (a, b, c, etc.)
 type CellarString = string | null;
 
@@ -152,3 +153,4 @@ const pda = new PDA([...q1q1, ...q1q2, ...q2q2, q2q3], "q1", "q3");
 const testString: CellarString[] = ["a", "b", "a", "c", "a", "b", "a"];
 
 pda.test(testString);
+
