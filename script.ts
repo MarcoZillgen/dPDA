@@ -1,7 +1,10 @@
+// String used for single character (a, b, c, etc.)
 type CellarString = string | null;
 
+// return of runOnce()
 type RunOnce = { newCellar: CellarString[]; newState: string } | null;
 
+// Connection between states
 class Connection {
   startState: string;
   endState: string;
@@ -20,6 +23,7 @@ class Connection {
   }
 }
 
+// Condition for a connection
 class Condition {
   string: CellarString;
   cellar: CellarString;
@@ -35,6 +39,7 @@ class Condition {
   }
 }
 
+// Pushdown automat class
 class PDA {
   connections: Connection[];
   startState: string;
@@ -45,14 +50,17 @@ class PDA {
     this.endState = endState;
   }
 
+  // Run the automat completely
   run(testString: CellarString[]) {
     let currentState: string = this.startState;
     let cellar: CellarString[] = ["Z"];
 
+    // Run the automat until the end state is reached
     for (let i = 0; i < testString.length; i++) {
       console.log(cellar);
       console.log(currentState);
 
+      // Find all connections that match the current state, string and cellar
       const currentString = testString[i];
       const currentCellar: CellarString =
         cellar.length > 0 ? cellar.pop()! : null;
@@ -62,8 +70,24 @@ class PDA {
         currentCellar
       );
 
-      if (currentConnections.length == 0) return false;
+      // If no connections are found, throw an error
+      if (currentConnections.length == 0)
+        throw new Error(
+          "No connections found for state " +
+            currentState +
+            " with string " +
+            currentString +
+            " and cellar " +
+            currentCellar +
+            " at index " +
+            i
+        );
 
+      // If multiple connections are found, throw an error
+      if (currentConnections.length > 1)
+        throw new Error("This is not a deterministic automat");
+
+      // If a connection is found, change the current state and cellar accordingly
       currentState = currentConnections[0].endState;
       cellar = [
         ...cellar,
@@ -73,10 +97,13 @@ class PDA {
       ];
     }
 
+    // Check if the end state is reached
     if (JSON.stringify(cellar) == JSON.stringify(["Z"])) return true;
-    else return false;
+    // If not, throw an error
+    else throw new Error("Cellar is not empty at the end of the string");
   }
 
+  // Find all connections that match the current state, string and cellar
   findConnections(
     currentState: string,
     currentString: CellarString,
@@ -90,13 +117,15 @@ class PDA {
     );
   }
 
+  // Test the automat with a given string and log the result
   test(testString: CellarString[]) {
     const test = this.run(testString);
-    if (test) console.log("\nTest passed");
-    else console.log("\nTest failed");
+    if (test) console.log("\nString accepted");
+    else console.log("\nString not accepted");
   }
 }
 
+// Automat for the language of exercise a)
 const q1q1 = [
   new Connection("q1", "q1", new Condition("a", "a", ["a", "a"])),
   new Connection("q1", "q1", new Condition("a", "b", ["a", "b"])),
