@@ -67,7 +67,9 @@ class PDA {
       currentState = currentConnections[0].endState;
       cellar = [
         ...cellar,
-        ...currentConnections[0].condition.newCellar.filter(cellarStr=> cellarStr != null).reverse(),
+        ...currentConnections[0].condition.newCellar
+          .filter((cellarStr) => cellarStr != null)
+          .reverse(),
       ];
     }
 
